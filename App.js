@@ -6,7 +6,8 @@
  * @flow
  */
 
-import React, {Fragment} from 'react';
+import React, {Fragment, Component} from 'react';
+import socketIO from 'socket.io-client';
 import {
   SafeAreaView,
   StyleSheet,
@@ -24,8 +25,19 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App = () => {
-  return (
+export default class App extends Component{
+  componentDidMount = () => {
+    const socket = socketIO('http://10.0.2.2:3000', {      
+    transports: ['websocket'], jsonp: false });   
+    socket.connect(); 
+    socket.on('connect', () => { 
+      console.log('connected to socket server'); 
+    }); 
+    socket.on('welcome', msg=>{console.log(msg)})
+    socket.emit('join exchange', "Henry", "Collis");
+  }
+  render = () => {
+    return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
@@ -64,8 +76,10 @@ const App = () => {
         </ScrollView>
       </SafeAreaView>
     </Fragment>
-  );
+    );
+  }
 };
+
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -94,4 +108,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
