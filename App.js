@@ -15,7 +15,9 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Animated,
+  Easing
 } from 'react-native';
 import HomeScreen from './screens/HomeScreen';
 import Login from './screens/Login';
@@ -35,6 +37,15 @@ const AppNav = createStackNavigator(
     ExchangeHub: ExchangeHub,
     Exchange: Exchange,
     BecomeSeller: BecomeSeller,
+  },
+  {
+    transitionConfig : () => ({
+      transitionSpec: {
+        duration: 0,
+        timing: Animated.timing,
+        easing: Easing.step0,
+        },
+    }),
   }
 );
 const AppContainer = createAppContainer(AppNav);

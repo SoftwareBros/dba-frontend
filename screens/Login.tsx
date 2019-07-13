@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import socketIO from 'socket.io-client';
-
+import Header from '../components/Header';
+import Title from '../components/Title';
+import TopGroup from '../components/TopGroup';
 type Props = {navigation: {navigate: Function } };
 type State = {};
 export default class Login extends Component<Props, State> {
@@ -11,17 +13,23 @@ export default class Login extends Component<Props, State> {
   render = () => {
     
     return (
-      <View style={styles.container}>
-        <Text style={{ fontSize: 45, fontWeight: 'bold' }}> Login </Text>
-        <Button
-          title='To Settings'
-          onPress={this.moveToSettings}
-        />
+      <View style={{height:'100%'}}>
+        <TopGroup title="Login"/>
+        <View style={{height: '80%'}}>
+          <Button
+            title='To Settings'
+            onPress={this.moveToSettings}
+          />
+        </View>
+        
       </View>
     );
   }
 
 }
+Login.navigationOptions = {
+  header: null,
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

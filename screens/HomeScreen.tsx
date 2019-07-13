@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import socketIO from 'socket.io-client';
-
+import TopGroup from '../components/TopGroup';
 type Props = {navigation: {navigate: Function } };
 type State = {};
 export default class HomeScreen extends Component<Props, State> {
@@ -47,20 +47,25 @@ export default class HomeScreen extends Component<Props, State> {
   render = () => {
     
     return (
-      <View style={styles.container}>
-        <Text style={{ fontSize: 45, fontWeight: 'bold' }}> {`Status: ${this.state.status}`} </Text>
-        <Button
-          title='Send request'
-          onPress={this.pingServer}
-        />
-        <Button
-          title='Login'
-          onPress={this.moveToLogin}
-        />
+      <View style={{height:'100%'}}>
+        <TopGroup title="Home"/>
+        <View style={{height: '80%'}}>
+          <Text style={{ fontSize: 45, fontWeight: 'bold' }}> {`Status: ${this.state.status}`} </Text>
+          <Button
+            title='Send request'
+            onPress={this.pingServer}
+          />
+          <Button
+            title='Login'
+            onPress={this.moveToLogin}
+          />
+        </View>
       </View>
     );
 }}
-
+HomeScreen.navigationOptions = {
+  header: null,
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

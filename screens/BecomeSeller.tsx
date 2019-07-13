@@ -4,7 +4,7 @@ import socketIO from 'socket.io-client';
 
 type Props = {navigation: {navigate: Function } };
 type State = {};
-export default class Login extends Component<Props, State> {
+export default class BecomeSeller extends Component<Props, State> {
   moveToExchange = () => {
     this.props.navigation.navigate('Exchange');
   }
@@ -22,6 +22,9 @@ export default class Login extends Component<Props, State> {
   }
 
 }
+BecomeSeller.navigationOptions = {
+  header: null,
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
