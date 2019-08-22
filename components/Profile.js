@@ -7,7 +7,7 @@ import Title from './Title';
 export default function Profile(props) {
   //const comps = {fitnessHome, memoryHome}
   return (
-    <View style={{textAlign: 'center', height: '80%'}}>
+    <View style={{textAlign: 'center'}}>
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
         <View style={{flexDirection: 'column', }}>
           <Image source={props.picture} style={{width: 200, height: 200, borderRadius: 100}}/>
