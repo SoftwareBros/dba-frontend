@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, ScrollView, List, FlatList } from 'react-native';
+import { Text, View, Image, ScrollView, List, FlatList, TouchableWithoutFeedback } from 'react-native';
 
 export default function Listings(props) {
   const amount = 10;
@@ -9,11 +9,14 @@ export default function Listings(props) {
           data={props.data}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) =>
-          <View style={{ padding: 5, backgroundColor: 'yellow', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 20,}}>{item.name}</Text>
-            <Text style={{fontSize: 20,textAlign: 'right'}}>{`$${item.discount*amount}`}</Text>
-          </View>
+          <TouchableWithoutFeedback onPress={()=>{props.callback(item)}}>
+            <View style={{ padding: 5, backgroundColor: 'yellow', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{fontSize: 20,}}>{item.name}</Text>
+              <Text style={{fontSize: 20,textAlign: 'right'}}>{`$${item.discount*amount}`}</Text>
+            </View>
+          </TouchableWithoutFeedback>
           }
+          onClick
           keyExtractor={item => item.name}
         />
     </ScrollView>
