@@ -7,6 +7,8 @@ import Title from '../components/Title';
 import TopGroup from '../components/TopGroup';
 import Listings from '../components/Listings';
 import AsyncStorage from '@react-native-community/async-storage';
+import { query } from '../helpers/query';
+import { moveToExchangeHub } from '../helpers/changeScreens';
 
 type Props = { navigation: { navigate: Function } };
 type State = {};
@@ -22,42 +24,23 @@ export default class Exchange extends Component<Props, State> {
       seller: { name: "place", discount: "holder", id: "test" },
       status: "unsent"
     }
-    this.getSellers = this.getSellers.bind(this);
   }
-  query = (type, body, endpoint, callback) => {
-    let data = {
-      method: type,
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
-    // console.log(body);
-    // console.log(data);
-    const that = this;
-    fetch(`http://10.0.2.2:1408/${endpoint}`, data).then(function (response: any) {
-      // console.log(response);
-      return response.json();
-    })
-      .then(function (res: any) {
-        callback(res, that);
-      }).catch((e) => {
-        console.log(e);
-      });
+  componentDidMount = () => {
+    this.getSellers();
+    this.sellerPingId = window.setInterval(this.getSellers, 1000);
   }
+
   checkAsBuyer = () => {
-    console.log("check as buyer");
     const body = {
       'id': this.state.id
     };
-    this.query("PUT", body, "checkBuyerTrans", (res, that) => {
-      console.log(res);
+    query("PUT", body, "checkBuyerTrans", (res, that) => {
       if (res.accepted) {
-        window.clearInterval(this.intervalId);
+        window.clearInterval(this.requestId);
         this.setState({ status: "Accepted!" });
       }
       else if (res.status === "no requests pending") {
-        window.clearInterval(this.intervalId);
+        window.clearInterval(this.requestId);
         this.setState({
           status: "Seller declined offer :("
         });
@@ -69,9 +52,9 @@ export default class Exchange extends Component<Props, State> {
     const body = {
       'name': this.state.venue
     };
-    this.query("PUT", body, "sellerList", (res, that) => {
+    query("PUT", body, "sellerList", (res, that) => {
       if (res.status === "success") {
-        that.setState({
+        this.setState({
           sellers: res.sellers
         });
       }
@@ -83,28 +66,7 @@ export default class Exchange extends Component<Props, State> {
   }
 
 
-  componentDidMount = () => {
-    this.getData();
-    window.setInterval(() => {
-      const self = this;
-      self.getSellers()
-    }, 1000);
-  }
-  getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@id')
-      this.setState(
-        {
-          id: value
-        }
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  moveToBecomeSeller = () => {
-    this.props.navigation.navigate('ProfileSettings');
-  }
+ 
 
   tryConnect = () => {
     const body = {
@@ -112,9 +74,7 @@ export default class Exchange extends Component<Props, State> {
       'sId': this.state.seller.id,
       'exchange': this.state.venue
     };
-    console.log(body);
-    console.log(this.state.seller);
-    this.query("POST", body, "connectBuyer", (res, that) => {
+    query("POST", body, "connectBuyer", (res, that) => {
       if (res.status === "success") {
         this.intervalId = window.setInterval(this.checkAsBuyer, 1000);
         this.setState({
@@ -122,12 +82,18 @@ export default class Exchange extends Component<Props, State> {
         });
       }
       else {
-        console.log(res.status);
+        this.setState({ status: res.status });
       }
     });
   }
+  closeModal = () => {
+    this.setState({
+      modalVisible: false,
+      status: "unsent"
+    })
+    window.clearInterval(this.requestId);
+  }
   triggerModal = (item) => {
-    console.log("triggered modal");
     this.setState({
       modalVisible: !this.state.modalVisible,
       seller: item
@@ -143,15 +109,10 @@ export default class Exchange extends Component<Props, State> {
           </View>
           <View style={{ height: '20%', backgroundColor: 'blue' }}>
             <Button
-              title='To Connect'
-              onPress={this.triggerModal}
-            />
-            <Button
-              title='To Become a Seller'
-              onPress={this.moveToBecomeSeller}
+              title='Back to Exchange Hub'
+              onPress={() => { window.clearInterval(this.sellerPingId); moveToExchangeHub(this, this.state.id) }}
             />
           </View>
-
         </View>
         <Modal
           animationType="slide"
@@ -166,7 +127,7 @@ export default class Exchange extends Component<Props, State> {
               <Text>Name: {this.state.seller.name}</Text>
               <Text>Discount: {this.state.seller.discount}</Text>
               <TouchableHighlight
-                onPress={this.triggerModal}>
+                onPress={this.closeModal}>
                 <Text>Hide Modal</Text>
               </TouchableHighlight>
               <Button

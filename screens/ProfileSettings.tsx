@@ -1,77 +1,49 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-import socketIO from 'socket.io-client';
-import Header from '../components/Header';
 import TopGroup from '../components/TopGroup';
 import Profile from '../components/Profile';
 import AsyncStorage from '@react-native-community/async-storage';
+import { query } from '../helpers/query';
+import { saveId } from '../helpers/saveId';
+import { moveToExchangeHub } from '../helpers/changeScreens';
 
 
 type Props = {navigation: {navigate: Function } };
 type State = {};
 export default class ProfileSettings extends Component<Props, State> {
-  moveToExchangeHub = () => {
-    this.props.navigation.navigate('ExchangeHub');
-  }
   tryRegister = () => {
     const name = this.name._lastNativeText;
     const email = this.email._lastNativeText;
     const amountToSell = this.amount._lastNativeText;
     const discount = this.discount._lastNativeText;
     const id = this.props.navigation.state.params.id;
-    let data = {
-      method: 'POST',
-      body: JSON.stringify({
+    const seller = Boolean(amountToSell)&&Boolean(discount);
+
+    let body = {
         'id': id,
         'name': name,
         'email': email,
-        'seller': (Boolean(amountToSell) && Boolean(discount)),
-        'sellerSettings': (Boolean(amountToSell) && Boolean(discount)) ? {'amountToSell': amountToSell, 'discount': discount}:null
-      }),
-      headers: {
-        "Content-Type": "application/json"
+        'seller': seller,
+        'sellerSettings': seller ? {'amountToSell': amountToSell, 'discount': discount}:null
       }
-    }
-    console.log(Boolean(amountToSell) && Boolean(discount));
-    const that = this;
-    return fetch("http://10.0.2.2:1408/signup", data).then(function(response: any){
-      return response.json();
-    })
-    .then(function(res: any){
-      console.log(res);
+    query("POST", body, "signup", (res)=>{
       if(res.status === "success"){
-        that.saveId(id, that.moveToExchangeHub);
+        saveId(id).then(()=>{moveToExchangeHub(this, id)});
       }
       else{
+        // ADD ERROR CASE
         console.log("failed login")
         console.log(res.status);
       }
-    }).catch((e)=>{
-      console.log(e);
     });
   }
 
-  saveId = async (id, callback) => {
-    try {
-      await AsyncStorage.clear(async (err) => {
-        try {
-          await AsyncStorage.setItem('@id', id, callback);
-        }
-        catch (e) {
-          console.log(e);
-        }
-      })
-    } catch (e) {
-      console.log(e);
-    }
-  }
   render = () => {
     
     return (
       <View style={{height: '100%'}}>
         <TopGroup title="Profile"/>
         <View style={{height: '80%'}}>
-          <Profile picture={require("../imgs/snacc.jpg")} name="Henry Foster" maxDBA={100} discount={75}/>
           <Text>Please enter your Name</Text>
           <TextInput
             style={{borderColor: 'gray', borderWidth: 1}}
