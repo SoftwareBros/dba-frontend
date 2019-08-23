@@ -2,13 +2,7 @@ import React from 'react';
 import { Text, View, Image, ScrollView, List, FlatList } from 'react-native';
 
 export default function Listings(props) {
-  for (let index = 0; index < props.data.length; index++) {
-    let person = props.data[index];
-    console.log(`name: ${person.name}, amount: ${person.amount}`);
-    
-  }
-  console.log(props.data);
-
+  const amount = 10;
   return(
     <ScrollView style={{backgroundColor: 'green', height: '100%', width: '90%', marginLeft: '5%', flexDirection: 'column'}}>
           <FlatList
@@ -17,10 +11,10 @@ export default function Listings(props) {
           renderItem={({item}) =>
           <View style={{ padding: 5, backgroundColor: 'yellow', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={{fontSize: 20,}}>{item.name}</Text>
-            <Text style={{fontSize: 20,textAlign: 'right'}}>{`$${item.amount}`}</Text>
+            <Text style={{fontSize: 20,textAlign: 'right'}}>{`$${item.discount*amount}`}</Text>
           </View>
           }
-          keyExtractor={item => item.email}
+          keyExtractor={item => item.name}
         />
     </ScrollView>
   );

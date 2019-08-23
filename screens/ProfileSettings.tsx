@@ -25,13 +25,14 @@ export default class ProfileSettings extends Component<Props, State> {
         'id': id,
         'name': name,
         'email': email,
-        'seller': (amountToSell && discount),
-        'sellerSettings': (amountToSell && discount) ? {'amountToSell': amountToSell, 'discount': discount}:null
+        'seller': (Boolean(amountToSell) && Boolean(discount)),
+        'sellerSettings': (Boolean(amountToSell) && Boolean(discount)) ? {'amountToSell': amountToSell, 'discount': discount}:null
       }),
       headers: {
         "Content-Type": "application/json"
       }
     }
+    console.log(Boolean(amountToSell) && Boolean(discount));
     const that = this;
     return fetch("http://10.0.2.2:1408/signup", data).then(function(response: any){
       return response.json();
