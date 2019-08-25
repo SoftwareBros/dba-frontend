@@ -31,10 +31,7 @@ export default class Exchange extends Component<Props, State> {
   }
 
   checkAsBuyer = () => {
-    const body = {
-      'id': this.state.id
-    };
-    query("PUT", body, "checkBuyerTrans", (res, that) => {
+    query("GET", undefined, `checkBuyerTrans?id=${this.state.id}`, (res, that) => {
       if (res.accepted) {
         window.clearInterval(this.requestId);
         this.setState({ status: "Accepted!" });
@@ -52,7 +49,7 @@ export default class Exchange extends Component<Props, State> {
     const body = {
       'name': this.state.venue
     };
-    query("PUT", body, "sellerList", (res, that) => {
+    query("GET", undefined, `sellerList?name=${this.state.venue}`, (res, that) => {
       if (res.status === "success") {
         this.setState({
           sellers: res.sellers
@@ -123,7 +120,6 @@ export default class Exchange extends Component<Props, State> {
           }}>
           <View style={{ marginTop: 22 }}>
             <View>
-              <Text>Connect Screen</Text>
               <Text>Name: {this.state.seller.name}</Text>
               <Text>Discount: {this.state.seller.discount}</Text>
               <TouchableHighlight

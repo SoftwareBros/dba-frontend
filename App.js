@@ -24,10 +24,8 @@ import Login from './screens/Login';
 import ProfileSettings from './screens/ProfileSettings';
 import ExchangeHub from './screens/ExchangeHub';
 import Exchange from './screens/Exchange';
-import BecomeSeller from './screens/BecomeSeller';
 
 import { useScreens } from 'react-native-screens';
-//useScreens();
 
 const AppNav = createStackNavigator(
   {
@@ -36,7 +34,6 @@ const AppNav = createStackNavigator(
     ProfileSettings: ProfileSettings,
     ExchangeHub: ExchangeHub,
     Exchange: Exchange,
-    BecomeSeller: BecomeSeller,
   },
   {
     transitionConfig : () => ({

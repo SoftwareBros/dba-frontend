@@ -12,7 +12,7 @@ export default function Listings(props) {
           <TouchableWithoutFeedback onPress={()=>{props.callback(item)}}>
             <View style={{ padding: 5, backgroundColor: 'yellow', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={{fontSize: 20,}}>{item.name}</Text>
-              <Text style={{fontSize: 20,textAlign: 'right'}}>{`$${item.discount*amount}`}</Text>
+              <Text style={{fontSize: 20,textAlign: 'right'}}>{`$${(1-item.discount)*amount}`}</Text>
             </View>
           </TouchableWithoutFeedback>
           }

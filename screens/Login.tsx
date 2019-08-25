@@ -14,7 +14,7 @@ export default class Login extends Component<Props, State> {
     const body = {
       'id': `${id}`
     };
-    query("POST", body, "login", (res) => {
+    query("GET", undefined, `login?id=${id}`, (res) => {
       if (res.status === "success") {
         saveId(id).then(()=>{moveToExchangeHub(this, id)})
       }
