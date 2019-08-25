@@ -1,97 +1,53 @@
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
- *
- * @format
- * @flow
+ * 
+ * Generated with the TypeScript template
+ * https://github.com/emin93/react-native-template-typescript
  */
 
-import React, {Fragment} from 'react';
+import React, { Component } from 'react';
 import {
-  SafeAreaView,
+  createStackNavigator,
+  createAppContainer,
+} from 'react-navigation';
+import {
+  Platform,
   StyleSheet,
-  ScrollView,
-  View,
   Text,
-  StatusBar,
+  View,
+  Animated,
+  Easing
 } from 'react-native';
+import HomeScreen from './screens/HomeScreen';
+import Login from './screens/Login';
+import ProfileSettings from './screens/ProfileSettings';
+import ExchangeHub from './screens/ExchangeHub';
+import Exchange from './screens/Exchange';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import { useScreens } from 'react-native-screens';
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
+const AppNav = createStackNavigator(
+  {
+    HomeScreen: HomeScreen,
+    Login: Login,
+    ProfileSettings: ProfileSettings,
+    ExchangeHub: ExchangeHub,
+    Exchange: Exchange,
+  },
+  {
+    transitionConfig : () => ({
+      transitionSpec: {
+        duration: 0,
+        timing: Animated.timing,
+        easing: Easing.step0,
+        },
+    }),
+  }
+);
+const AppContainer = createAppContainer(AppNav);
+export default class App extends React.Component{
+  render() {
+    return <AppContainer/>;
+  }
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
